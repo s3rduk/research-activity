@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Дослідницька діяльність: від ідеї до реалізації</title>
+<link rel="icon" type="image/jpg" sizes="32x32" href="chemistry_webpage_icon.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: #0d0d0d;
+        color: #fff;
+        overflow-x: hidden;
+        background-image: url('https://www.shutterstock.com/shutterstock/videos/1060989334/thumb/1.jpg?ip=x480');
+        background-attachment: fixed;
+    }
+
+    /* Prevent background scrolling when card is expanded */
+    body.no-scroll {
+        overflow: hidden;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 30px 0;
+        font-size: 32px;
+        font-weight: 600;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1300px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 30px;
+        padding-bottom: 40px;
+    }
+
+    /* ✨ GLASSMORPHIC CARD */
+    .card {
+		height: 260px;
+		transform-origin: center center;
+        position: relative;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1.7px solid rgba(255, 255, 255, 0.2);
+        border-radius: 18px;
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+        transition: 
+            transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            box-shadow 0.4s ease,
+            backdrop-filter 0.6s ease;
+        transform-style: preserve-3d;
+        cursor: pointer;
+        will-change: transform;
+        box-sizing: border-box;
+    }
+
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(255,255,255,0.35) 0%,
+            rgba(255,255,255,0.06) 40%,
+            rgba(0,150,255,0.25) 100%
+        );
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    .card:hover {
+        backdrop-filter: blur(16px);
+        box-shadow: 
+            0 0 0 2px rgba(255,255,255,0.32),
+            0 0 35px rgba(0,160,255,0.35);
+    }
+
+    .card > img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.5s ease;
+    }
+
+    .preview-overlay {
+        position: absolute;
+        /* Хитрість: ми фіксуємо початок блоку від верху, а не від низу.
+           260px (висота картки) - 85px (приблизна висота тексту) = ~175px */
+        top: 175px; 
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.5));
+        padding: 10px 16px;
+        color: white;
+        text-align: center;
+        z-index: 1002;
+        
+        /* Плавна анімація польоту вгору */
+        transition: 
+            top 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            padding 0.6s ease,
+            background 0.6s ease;
+    }
+
+    .preview-overlay h3 {
+        margin: 0 0 4px 0;
+        font-size: 18px;
+        font-weight: 600;
+		/* Анімація розміру шрифту */
+        transition: font-size 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), text-shadow 0.6s ease;
+        transform-origin: center top;
+    }
+
+    .preview-overlay p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.8;
+        /* Анімація зникнення тексту */
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .info {
+        padding: 16px;
+        transition: transform 0.4s, font-size 0.4s;
+        text-align: center;
+    }
+
+    .info a {
+        color: #91c8ff;
+        font-size: 18px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: font-size 0.3s ease, color 0.3s ease;
+    }
+
+    .card:hover .info a {
+        font-size: 20px;
+        color: #ffffff;
+    }
+
+    /* Placeholder for original card position */
+    .card-placeholder {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    /* ======================================================
+       📌 EXPANDED MODE — ABSOLUTE POSITIONING
+       ====================================================== */
+    .card.expanding {
+        position: absolute;
+        z-index: 1000;
+        transition: 
+            top 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            height 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            border-radius 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            backdrop-filter 0.6s ease,
+            box-shadow 0.6s ease;
+        will-change: top, left, width, height;
+        transform: none !important;
+    }
+
+    .card.expanded {
+        position: absolute !important; /* Фіксуємо картку відносно viewport */
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 85vw !important;
+        height: 85vh !important;
+        border-radius: 24px !important;
+        backdrop-filter: blur(25px) !important;
+        background: rgba(255,255,255,0.08) !important;
+        backdrop-filter: blur(30px) brightness(0.9) !important;
+        box-shadow: 
+            0 0 0 2px rgba(255,255,255,0.4),
+            0 0 50px rgba(0,140,255,0.45) !important;
+    }
+
+    /* MOBILE EXPANDED CARD - FULL SCREEN */
+    @media (max-width: 600px) {
+        .card.expanded {
+            position: fixed !important; 
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            transform: none !important;
+        }
+    }
+
+    .card.expanded img {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .card.expanded .preview-overlay {
+        top: 0;              /* Притискаємо до верху */
+        bottom: auto;        /* Відпускаємо низ */
+        height: 70px;        /* Фіксуємо висоту шапки */
+        opacity: 1;          /* Залишаємо видимим! */
+        pointer-events: all;
+        background: linear-gradient(rgba(0,0,0,0.6), transparent); /* Градієнт зверху */
+        padding-top: 20px;
+		
+		/* ✨ NEW: Safe zones for the close button */
+        padding-right: 50px; /* Pushes text away from the right (button side) */
+        padding-left: 50px;  /* Adds equal space on the left to keep text centered */
+        box-sizing: border-box; /* Ensures padding counts inside the width */
+		
+		/* ✅ FIX 1: Set a fixed width to prevent content overflow on super wide screens
+       And ensure it covers the card's full width for the background */
+    width: 100%; /* Ensure it spans the full width of the expanded card */
+    }
+
+    .card.expanded .preview-overlay h3 {
+        font-size: 28px;
+        text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+		
+		/* Ensure text wraps to the next line if necessary to prevent overflow */
+    white-space: normal;
+    overflow: hidden; /* Prevent text from escaping the boundary if it still won't fit */
+    word-break: break-word; /* Allows long words to wrap */
+    }
+
+    .card.expanded .preview-overlay p {
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 34px;
+        height: 34px;
+        background: rgba(255,255,255,0.23);
+        border-radius: 50%;
+        backdrop-filter: blur(8px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s;
+        border: 1px solid rgba(255,255,255,0.35);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1003;
+    }
+
+    .card.expanded .close-btn {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .close-btn:hover {
+        background: rgba(255,255,255,0.35);
+        transform: scale(1.12);
+    }
+
+    .expanded-content {
+        position: absolute;
+        top: 80px;
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        overflow-y: auto;
+        padding: 10px;
+        flex-grow: 1;
+        padding-top: 0px;
+    }
+
+    /* MOBILE EXPANDED CONTENT ADJUSTMENTS */
+    @media (max-width: 600px) {
+        .expanded-content {
+            top: 100px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            padding: 5px;
+            padding-top: 0px;
+        }
+		.resize-handle {
+			display: none !important;
+		}
+    }
+/* 📐 Centering Fix for Desktop Only */
+/* This media query activates when there's enough space for at least 3 cards (approx 260px * 3 + gaps) */
+@media (min-width: 900px) {
+		.container {
+			/* Temporarily switch to flexbox to enable justify-content: center */
+			display: flex;
+			flex-wrap: wrap; 
+			justify-content: center; /* This centers the items horizontally */
+		}
+
+		.card {
+			/* Important: Define the base width so cards don't stretch */
+			width: 20vw; 
+		}
+		.the-title{
+	font-size: 50px !important;
+}
+	}
+    .content-text {
+        margin: 15px 0;
+        line-height: 1.6;
+        color: white;
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .content-image {
+        width: auto;           /* Дозволяємо ширині бути натуральною, але не більше max-width */
+        height: auto;          /* ВАЖЛИВО: скидаємо фіксовану висоту, якщо вона все ж таки прилетить */
+        max-width: 100%;
+        max-height: 70vh;      /* Обмеження по висоті екрану */
+        object-fit: contain;   /* Показуємо повністю, не обрізаючи */
+        border-radius: 8px;
+        margin: 10px auto;     /* auto центрує картинку горизонтально */
+        display: block;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Легка тінь для краси */
+    }
+
+    .content-video, .content-audio {
+        display: block;        /* Важливо для центрування */
+        width: 100%;
+        max-width: 800px;      /* Трохи збільшив, щоб відео було більшим */
+        border-radius: 8px;
+        
+        /* ✨ ЦЕНТРУВАННЯ ✨ */
+        margin: 20px auto;     /* Центрує елемент по горизонталі */
+    }
+    
+    .expanded-content iframe { /* Додаємо iframe */
+        display: block;
+        width: 100%;           /* Fill the available width */
+        max-width: 800px;      /* Stop getting too big on desktop */
+        
+        /* ✨ THE MAGIC FIX: */
+        aspect-ratio: 16 / 9;  /* Locks the ratio so it never distorts */
+        height: auto;          /* Removes the fixed 450px height */
+        
+        border-radius: 8px;
+        margin: 20px auto;
+        border: none;          /* Cleaner look */
+    }
+
+    #video-background {
+        position: fixed; /* Фіксуємо відео щодо вікна перегляду */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden; /* Обрізаємо все, що виходить за межі екрану */
+        z-index: -10; /* Відправляємо відео далеко назад, щоб не заважало контенту */
+    }
+
+    #video-background video {
+        /* Робимо відео покриваючим весь контейнер, зберігаючи пропорції */
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Центруємо відео */
+        
+        /* ✨ ЕФЕКТ РОЗМИТТЯ (Blur) ✨ */
+        filter: blur(5px); /* Налаштуйте значення (наприклад, 3px-7px) на свій смак */
+        transition: transform 0.15s ease-out; /* Для плавного руху курсору */
+    }
+	
+	.content-text a {
+        color: #5facff;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(95, 172, 255, 0.3);
+        transition: all 0.2s ease;
+    }
+
+    .content-text a:hover {
+        color: #ffffff;
+        border-bottom-color: #ffffff;
+        background: rgba(95, 172, 255, 0.1);
+    }
+
+/* 📄 Document Viewer (PDF, DOCX, PPTX) - RESIZABLE */
+.content-document {
+    /* Основні налаштування розміру */
+    display: block !important;
+    width: 100%;
+    max-width: 70% !important;
+    
+    /* Змінюємо мінімальну висоту, щоб вміст було видно */
+    min-height: 400px; 
+    //height: 60vh !important; /* Встановлюємо початкову висоту у відсотках від вікна перегляду */
+    max-height: 100vh; /* Обмежуємо максимальний розмір */
+
+    /* ВАЖЛИВО: Налаштування для зміни розміру */
+    overflow: auto; /* Дозволяє вмісту прокручуватися, якщо він занадто великий */
+    //resize: vertical; /* Дозволяє користувачеві перетягувати елемент по вертикалі */
+    
+    /* Візуальні налаштування */
+    margin: 20px auto;
+    border: 2px solid rgba(95, 172, 255, 0.5); /* Виділяємо рамку */
+    border-radius: 8px;
+    background: #1a1a1a;
+}
+/* ✨ СТИЛЬ ДЛЯ РУЧКИ ПЕРЕТЯГУВАННЯ ✨ */
+.resize-handle {
+    display: flex; /* 👈 ВИКОРИСТОВУЄМО FLEXBOX ДЛЯ ЦЕНТРУВАННЯ ТЕКСТУ */
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1000px;
+    height: 25px; /* Збільшуємо висоту для тексту */
+    background: #999999;
+    cursor: ns-resize;
+    border-radius: 0 0 8px 8px;
+    margin: 0 auto 20px auto;
+    opacity: 0.8;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    box-sizing: border-box;
+
+    /* СТИЛЬ ТЕКСТУ */
+    color: #000000;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    user-select: none; /* Забороняємо виділення тексту ручки */
+}
+
+.resize-handle:hover {
+    opacity: 1;
+    background: #FFFFFF;
+}
+    .download-link {
+        display: block;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #BDBDBD;
+    }
+    .download-link a {
+        color: #BDBDBD;
+        text-decoration: underline;
+    }
+	/* Додайте це до свого стилю */
+body.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.video-facade {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 16 / 9; /* Matches the video ratio */
+    margin: 20px auto;
+    border-radius: 8px;
+    /* CHANGE: Use a slight dark overlay instead of pure black background */
+    background-color: rgba(0, 0, 0, 0.4); 
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-facade img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1 !important;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.video-facade:hover img {
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+/* The Play Button Circle */
+.play-btn-overlay {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+    pointer-events: none; /* Let clicks pass through to the container */
+}
+
+/* The Triangle Icon */
+.play-btn-overlay::after {
+    content: "";
+    display: block;
+    width: 0; 
+    height: 0; 
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 18px solid #fff;
+    margin-left: 4px; /* Optical centering */
+}
+
+.video-facade:hover .play-btn-overlay {
+    transform: scale(1.2);
+    background: rgba(0, 150, 255, 0.6);
+    border-color: #5facff;
+}
+</style>
+</head>
+<body>
+
+<h1 class="the-title">Дослідницька діяльність: від ідеї до реалізації</h1>
+<div class="container" id="gallery"></div>
+<div id="debug"></div>
+
+<div id="video-background">
+    <video autoplay loop muted playsinline>
+        <source src="chemistry_webpage_background_slowed.mp4" type="video/mp4">
+    </video>
+</div>
+<script>
+/* =========================================
+   1. ANIMATION & UI LOGIC (UNCHANGED)
+   ========================================= */
+
+let tiltedCard = null;
+const cardPositions = new WeakMap();
+
+function setupResizableElement(targetElement, handleElement) {
+    let startY, startHeight;
+
+    const handleMouseMove = (e) => {
+        const deltaY = e.clientY - startY;
+        let newHeight = startHeight + deltaY;
+        const minHeight = 200; 
+        const maxHeight = window.innerHeight * 0.9;
+        
+        if (newHeight >= minHeight && newHeight <= maxHeight) {
+            targetElement.style.height = `${newHeight}px`;
+        }
+    };
+
+    const handleMouseUp = () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.body.style.cursor = '';
+        document.body.classList.remove('no-select');
+        document.querySelectorAll('iframe').forEach(iframe => {
+            iframe.style.pointerEvents = '';
+        });
+    };
+
+    handleElement.addEventListener('mousedown', (e) => {
+        startY = e.clientY;
+        startHeight = targetElement.offsetHeight;
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        document.body.style.cursor = 'ns-resize';
+        document.body.classList.add('no-select'); 
+        document.querySelectorAll('iframe').forEach(iframe => {
+            iframe.style.pointerEvents = 'none';
+        });
+        e.preventDefault();
+    });
+}
+
+function setupCardTilt(card) {
+    card.addEventListener('mouseenter', () => {
+        if (!card.classList.contains('expanding') && !card.classList.contains('expanded')) {
+            tiltedCard = card;
+            card.style.transition = 'transform 0.1s ease-out, box-shadow 0.1s ease-out'; 
+        }
+    });
+
+    card.addEventListener('mouseleave', () => {
+        if (card === tiltedCard && !card.classList.contains('expanding') && !card.classList.contains('expanded')) {
+            card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease, background 0.5s ease';
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+            card.style.boxShadow = '';
+            card.style.background = '';
+            tiltedCard = null;
+        }
+    });
+}
+
+document.addEventListener('mousemove', (e) => {
+    if (!tiltedCard || tiltedCard.classList.contains('expanding') || tiltedCard.classList.contains('expanded')) return;
+
+    const rect = tiltedCard.getBoundingClientRect();
+    const x = e.clientX - (rect.left + rect.width / 2);
+    const y = e.clientY - (rect.top + rect.height / 2);
+    const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+    const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+    const rotateX = (-y / 8).toFixed(2); 
+    const rotateY = (x / 8).toFixed(2);
+    const shadowX = (x / 12).toFixed(2);
+    const shadowY = (y / 12).toFixed(2);
+
+    tiltedCard.style.transform = `
+        perspective(1000px) 
+        rotateX(${rotateX}deg) 
+        rotateY(${rotateY}deg) 
+        scale(1.05)
+    `;
+
+    tiltedCard.style.boxShadow = `
+        ${-shadowX}px ${-shadowY}px 30px rgba(0, 0, 0, 0.6),
+        0 0 0 2px rgba(255,255,255,0.32),
+        0 0 35px rgba(0,160,255,0.35)
+    `;
+
+    tiltedCard.style.background = `
+        radial-gradient(
+            circle at ${mouseX}% ${mouseY}%, 
+            rgba(255, 255, 255, 0.25) 0%, 
+            rgba(255, 255, 255, 0.05) 40%, 
+            transparent 80%
+        ),
+        rgba(255, 255, 255, 0.04)
+    `;
+});
+
+// CLICK TO OPEN CARD
+document.addEventListener('click', (e) => {
+    const card = e.target.closest('.card');
+    if (!card) return;
+
+    if (document.querySelector('.card.expanded') || document.querySelector('.card.expanding')) return;
+    if (card.classList.contains('expanding') || card.classList.contains('expanded')) return;
+
+    card.style.transform = 'none';
+    tiltedCard = null;
+
+    const rect = card.getBoundingClientRect();
+    const computedStyle = getComputedStyle(card);
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+
+    cardPositions.set(card, {
+        top: rect.top + scrollTop,
+        left: rect.left + scrollLeft,
+        width: rect.width,
+        height: rect.height,
+        borderRadius: computedStyle.borderRadius,
+        gridColumn: computedStyle.gridColumn,
+        gridRow: computedStyle.gridRow
+    });
+
+    const placeholder = document.createElement('div');
+    placeholder.className = 'card-placeholder';
+    placeholder.style.width = `${rect.width}px`;
+    placeholder.style.height = `${rect.height}px`;
+    placeholder.style.gridColumn = computedStyle.gridColumn;
+    placeholder.style.gridRow = computedStyle.gridRow;
+    card.parentNode.insertBefore(placeholder, card);
+
+    card.classList.add('expanding');
+    card.style.position = 'absolute';
+    card.style.top = `${rect.top + scrollTop}px`;
+    card.style.left = `${rect.left + scrollLeft}px`;
+    card.style.width = `${rect.width}px`;
+    card.style.height = `${rect.height}px`;
+    card.style.borderRadius = rect.height > 50 ? '18px' : '12px';
+
+    card.offsetHeight; // Force layout
+
+    let closeBtn = card.querySelector('.close-btn');
+    if (!closeBtn) {
+        closeBtn = document.createElement('div');
+        closeBtn.className = 'close-btn';
+        closeBtn.innerHTML = '&times;';
+        card.appendChild(closeBtn);
+    }
+
+    card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            card.classList.add('expanded');
+            document.body.classList.add('no-scroll');
+            // UPDATED: Now calls the simpler load function
+            loadCardContent(card.dataset.id, card);
+        });
+    });
+});
+
+// CLOSE CARD
+document.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('close-btn')) return;
+
+    const card = e.target.closest('.card');
+    const pos = cardPositions.get(card);
+    if (!pos) return;
+
+    const placeholder = Array.from(card.parentNode.children).find(
+        el => el.classList.contains('card-placeholder')
+    );
+
+    const contentContainer = card.querySelector('.expanded-content');
+    if (contentContainer) {
+        contentContainer.style.opacity = '0';
+        contentContainer.style.transform = 'translateY(20px)';
+    }
+
+    setTimeout(() => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+        const rect = card.getBoundingClientRect();
+        
+        card.style.transition = 'none'; 
+        card.style.top = `${rect.top + scrollTop}px`;
+        card.style.left = `${rect.left + scrollLeft}px`;
+        card.style.width = `${rect.width}px`;
+        card.style.height = `${rect.height}px`;
+        card.style.transform = 'none'; 
+        card.classList.remove('expanded');
+        void card.offsetHeight; 
+
+        card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        card.style.boxShadow = '';
+        card.style.background = '';
+        if(card.querySelector('.preview-overlay')) {
+            card.querySelector('.preview-overlay').style.top = '';
+        }
+
+        requestAnimationFrame(() => {
+            card.style.top = `${pos.top}px`;
+            card.style.left = `${pos.left}px`;
+            card.style.width = `${pos.width}px`;
+            card.style.height = `${pos.height}px`;
+            card.style.borderRadius = pos.borderRadius || '18px';
+        });
+
+        setTimeout(() => {
+            card.style.position = '';
+            card.style.top = '';
+            card.style.left = '';
+            card.style.width = '';
+            card.style.height = '';
+            card.style.borderRadius = '';
+            card.style.transition = '';
+            card.classList.remove('expanding');
+
+            const closeBtn = card.querySelector('.close-btn');
+            if (closeBtn) closeBtn.remove();
+            if (contentContainer) contentContainer.remove();
+            if (placeholder) placeholder.remove();
+            
+            card.style.gridColumn = pos.gridColumn;
+            card.style.gridRow = pos.gridRow;
+            cardPositions.delete(card);
+            document.body.classList.remove('no-scroll');
+        }, 600);
+    }, 200);
+});
+
+// BACKGROUND VIDEO MOVEMENT
+document.addEventListener('mousemove', (e) => {
+    const videoContainer = document.querySelector('#video-background video');
+    if (!videoContainer) return;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const centerX = vw / 2;
+    const centerY = vh / 2;
+    const offsetX = (e.clientX - centerX) / centerX;
+    const offsetY = (e.clientY - centerY) / centerY;
+    const moveX = offsetX * vw * 0.015 * -1; 
+    const moveY = offsetY * vh * 0.015 * -1;
+    videoContainer.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+});
+
+
+/* =========================================
+   2. CONTENT RENDERING LOGIC
+   ========================================= */
+
+function displayCardContent(contentArray, cardElement) {
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'expanded-content';
+    contentContainer.style.opacity = '0';
+    contentContainer.style.transform = 'translateY(20px)';
+
+    // Helper to get ID (Modified to return ID, not full URL)
+    const getYouTubeId = (url) => {
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?.*v=)|youtube\.com\/v\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+        return match ? match[1] : null;
+    };
+    
+    const createFallbackLink = (src, isDownload = false) => {
+        const wrapper = document.createElement('div');
+        const actionText = isDownload ? 'Завантажити файл' : 'натисніть тут';
+        const downloadAttr = isDownload ? ' download' : ' target="_blank"';
+        const message = `Якщо контент не відображається, <a href="${src}"${downloadAttr}>${actionText}</a>`;
+        wrapper.innerHTML = `<p class="download-link">${message}</p>`;
+        return wrapper;
+    };
+
+    contentArray.forEach(item => {
+        let element;
+
+        switch(item.type) {
+            case 'text':
+                const textHtml = convertToHtml(item.value);
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = textHtml;
+                Array.from(tempDiv.children).forEach(el => {
+                    if (el.tagName === 'P') {
+                        el.className = 'content-text';
+                        contentContainer.appendChild(el);
+                    }
+                });
+                return; 
+
+            case 'pdf':
+                contentContainer.appendChild(createFallbackLink(item.src, false)); 
+                element = document.createElement('iframe');
+                element.src = item.src;
+                element.className = 'content-document';
+                break;
+
+            case 'docx':
+            case 'pptx':
+                contentContainer.appendChild(createFallbackLink(item.src, true)); 
+                element = document.createElement('iframe');
+                element.src = `https://docs.google.com/gview?url=${encodeURIComponent(item.src)}&embedded=true`;
+                element.className = 'content-document';
+                break;
+                
+            /* =========================================
+               🚀 OPTIMIZED YOUTUBE LOADING
+               ========================================= */
+            case 'youtube':
+                const videoId = getYouTubeId(item.src);
+                if (!videoId) return;
+
+                // 1. Create the wrapper (Facade) - KEEPING THIS
+                const facade = document.createElement('div');
+                facade.className = 'video-facade';
+                
+                // 2. Add Thumbnail and Play Button
+                facade.innerHTML = `
+                    <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="Video Preview">
+                    <div class="play-btn-overlay"></div>
+                `;
+
+                // 3. Add Click Event: Swap for Iframe AND Play immediately
+                facade.addEventListener('click', function() {
+                    const iframe = document.createElement('iframe');
+                    
+                    // ✨ FIX: ?autoplay=1 is mandatory. &rel=0 prevents random videos at the end.
+                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                    
+                    iframe.className = 'content-video';
+                    iframe.setAttribute('frameborder', '0');
+                    
+                    // ✨ FIX: Explicitly allow autoplay in the permissions policy
+                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+                    iframe.setAttribute('allowfullscreen', 'true');
+                    
+                    // Clear the image/button and add iframe
+                    this.innerHTML = '';
+                    this.style.background = 'transparent'; 
+                    this.appendChild(iframe);
+                });
+
+                contentContainer.appendChild(createFallbackLink(item.src, false));
+                element = facade; 
+                break;
+                
+            case 'image':
+                contentContainer.appendChild(createFallbackLink(item.src, false));
+                if (item.src.includes('drive.google.com') && item.src.includes('/preview')) {
+                    element = document.createElement('iframe');
+                    element.src = item.src;
+                    element.className = 'content-video'; 
+                    element.setAttribute('frameborder', '0');
+                    element.setAttribute('allowfullscreen', 'true');
+                } else {
+                    element = document.createElement('img');
+                    element.src = item.src;
+                    element.alt = item.alt || '';
+                    element.className = 'content-image';
+                    element.onload = () => { element.style.opacity = '1'; };
+                    element.style.opacity = '0';
+                }
+                break;
+                
+            case 'video':
+                contentContainer.appendChild(createFallbackLink(item.src, false));
+
+                if (item.previewImage) {
+                    // 1. Create the Facade Wrapper - KEEPING THIS
+                    const facade = document.createElement('div');
+                    facade.className = 'video-facade'; 
+                    
+                    // 2. Insert Image & Play Button
+                    facade.innerHTML = `
+                        <img src="${item.previewImage}" alt="Video Preview">
+                        <div class="play-btn-overlay"></div>
+                    `;
+
+                    // 3. Click Event: Swap Image for Video
+                    facade.addEventListener('click', function() {
+                        let actualPlayer;
+
+                        // Check if it is Google Drive
+                        if (item.src.includes('drive.google.com') && item.src.includes('/preview')) {
+                            actualPlayer = document.createElement('iframe');
+                            actualPlayer.src = item.src; // Drive previews usually auto-play if clicked properly
+                            actualPlayer.setAttribute('allowfullscreen', 'true');
+                            actualPlayer.setAttribute('frameborder', '0');
+                            actualPlayer.setAttribute('allow', 'autoplay');
+                        } else {
+                            // Standard Video File (.mp4)
+                            actualPlayer = document.createElement('video');
+                            actualPlayer.src = item.src;
+                            actualPlayer.controls = true;
+                            
+                            // ✨ FIX: Force the video to play immediately via JS
+                            // The browser allows this because the user just clicked the facade
+                            actualPlayer.play().catch(e => console.log("Autoplay blocked:", e));
+                        }
+
+                        actualPlayer.className = 'content-video';
+                        
+                        this.innerHTML = '';
+                        this.style.background = 'transparent';
+                        this.appendChild(actualPlayer);
+                    });
+                    
+                    element = facade;
+                } else {
+                    // Fallback if no preview image exists (just load the player)
+                    const videoEl = document.createElement('video');
+                    videoEl.src = item.src;
+                    videoEl.controls = true;
+                    videoEl.className = 'content-video';
+                    element = videoEl;
+                }
+                break;
+                
+            case 'audio':
+                contentContainer.appendChild(createFallbackLink(item.src, false));
+                element = document.createElement('audio');
+                element.src = item.src;
+                element.controls = true;
+                element.className = 'content-audio';
+                break;
+        }
+        
+        // Attach elements to container
+        if (element && element.classList && element.classList.contains('content-document')) {
+            const handle = document.createElement('div');
+            handle.className = 'resize-handle';
+            const elementId = `doc-${Math.random().toString(36).substring(2, 9)}`;
+            element.id = elementId;
+            handle.dataset.targetId = elementId;
+            handle.textContent = '↑ ПЕРЕТЯГНІТЬ, ЩОБ ЗМІНИТИ ВИСОТУ ↓';
+            contentContainer.appendChild(element);
+            contentContainer.appendChild(handle);
+            setupResizableElement(element, handle);
+        } else if (element) {
+            contentContainer.appendChild(element);
+        }
+    });
+    
+    cardElement.appendChild(contentContainer);
+    
+    setTimeout(() => {
+        contentContainer.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        contentContainer.style.opacity = '1';
+        contentContainer.style.transform = 'translateY(0)';
+    }, 50);
+}
+function convertToHtml(markdownText) {
+    if (!markdownText) return '';
+    let html = markdownText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = html.replace(/\n/g, '<br>');
+    return `<p>${html}</p>`; 
+}
+
+/* =========================================
+   3. DATA LOADING & INITIALIZATION
+   ========================================= */
+
+let cardsData = []; // Global storage for the data
+
+async function initializeGallery() {
+    // ⚠️ DEFINE YOUR DEPLOYED URLs HERE
+    const LOAD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrFLkafkz9rKHqgPatI9yGXcu50rZHcUiUCQiYSXm-GW2He_ujdXMLwLgFKoMUX-vw/exec";   // URL from Script 1
+    const UPDATE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzz3-XilI5-TsXRxNz2GSZIaLmj5hq7o9s-Yk9Es-4Sfe3ynKOJaqbjoUWWXnOeV30k/exec"; // URL from Script 2
+    const JSON_FILE_ID = "1BkhkIz3kE1ryyqcm1XvSmtmAkuaJ9y9x";
+
+    const gal = document.getElementById("gallery");
+    if(!gal) return;
+
+    try {
+        // Step 1: GET existing data (Fast load) - Uses the dedicated Load Script
+        const response = await fetch(`${LOAD_SCRIPT_URL}?id=${JSON_FILE_ID}`);
+        
+        if (!response.ok) throw new Error("Failed to fetch JSON from Load Script");
+        
+        cardsData = await response.json(); // Use const here for better scope management
+
+        // Render the gallery immediately
+        renderGalleryCards(cardsData, gal); // Assuming renderGalleryCards can access cardsData
+
+        // Step 2: Trigger Update (Background) - Uses the dedicated Update Script
+        console.log("Triggering background sync...");
+
+        fetch(`${UPDATE_SCRIPT_URL}?id=${JSON_FILE_ID}`)
+            .then(response => {
+                if (response.ok) {
+                    console.log("Background update finished successfully.");
+                } else {
+                    console.warn("Background update failed (response not OK). Status:", response.status);
+                }
+            })
+            .catch(e => console.warn("Background update failed (network error)", e));
+
+    } catch (error) {
+        console.error("Gallery Init Error:", error);
+        gal.innerHTML = `<p style="text-align:center; color: white;">Error loading content. Please try refreshing.</p>`;
+    }
+}
+
+function renderGalleryCards(items, galleryElement) {
+    galleryElement.innerHTML = ''; // Clear loading text
+    
+    items.forEach(obj => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.id = obj.id;
+
+        card.innerHTML = `
+            <img src="${obj.preview}" alt="Preview" class="preview-img">
+            <div class="preview-overlay">
+                <h3>${obj.title}</h3>
+                <p class="preview-text">${obj.previewText || ''}</p>
+            </div>
+        `;
+        galleryElement.appendChild(card);
+        setupCardTilt(card);
+    });
+}
+
+// SIMPLIFIED: Just grab data from memory
+function loadCardContent(cardId, cardElement) {
+    const item = cardsData.find(item => item.id == cardId);
+    if (!item || !item.content) return;
+
+    displayCardContent(item.content, cardElement);
+}
+
+// Start the process
+initializeGallery();
+</script>
+</html>
