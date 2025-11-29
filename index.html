@@ -278,14 +278,15 @@
 		
 		/* Ensure text wraps to the next line if necessary to prevent overflow */
     white-space: normal;
-    overflow: hidden; /* Prevent text from escaping the boundary if it still won't fit */
+    //overflow: auto; /* Prevent text from escaping the boundary if it still won't fit */
     word-break: break-word; /* Allows long words to wrap */
     }
 
     .card.expanded .preview-overlay p {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(-40px);
         pointer-events: none;
+		overflow: hidden;
     }
 
     .close-btn {
