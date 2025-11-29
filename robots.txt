@@ -1,1 +1,5 @@
 
+User-agent: *
+Allow: /
+
+Sitemap: https://s3rduk.github.io/chemistry_webpage/sitemap.xml
