@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
+<meta name="google-site-verification" content="VO_AwGF8EJDdQqcUPWePuIvlt9E03f9aehbu2CxpOzA" />
 <meta charset="UTF-8">
-	<meta name="google-site-verification" content="VO_AwGF8EJDdQqcUPWePuIvlt9E03f9aehbu2CxpOzA" />
 <title>Дослідницька діяльність: від ідеї до реалізації</title>
 <link rel="icon" type="image/jpg" sizes="32x32" href="chemistry_webpage_icon.jpg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +28,7 @@
         margin: 30px 0;
         font-size: 32px;
         font-weight: 600;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.8);
     }
 
     .container {
@@ -313,8 +313,8 @@
 			width: 20vw; 
 		}
 		.the-title{
-	font-size: 50px !important;
-}
+			font-size: 70px !important;
+		}
 	}
     .content-text {
         margin: 15px 0;
@@ -387,7 +387,7 @@
     }
 	
 	.content-text a {
-        color: #5facff;
+        color: #BAF2FF;
         text-decoration: none;
         font-weight: 600;
         border-bottom: 1px solid rgba(95, 172, 255, 0.3);
@@ -532,19 +532,162 @@ body.no-select {
     background: rgba(0, 150, 255, 0.6);
     border-color: #5facff;
 }
+/* =========================================
+   💬 COMMENTS SECTION STYLES
+   ========================================= */
+.comments-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1.7px solid rgba(255, 255, 255, 0.2);
+    border-radius: 18px;
+    backdrop-filter: blur(10px);
+    color: white;
+}
+
+.comments-header {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.glass-input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box; /* Fix padding issues */
+    transition: border 0.3s;
+}
+
+.glass-input:focus {
+    border-color: #5facff;
+}
+
+textarea.glass-input {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.submit-btn {
+    padding: 12px 24px;
+    background: rgba(0, 150, 255, 0.2);
+    border: 1px solid rgba(0, 150, 255, 0.4);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    align-self: flex-end;
+}
+
+.submit-btn:hover {
+    background: rgba(0, 150, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.comment-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
+}
+
+.comment-author {
+    color: #5facff;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.comment-body {
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    word-wrap: break-word;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
 </style>
 </head>
 <body>
 
 <h1 class="the-title">Дослідницька діяльність: від ідеї до реалізації</h1>
 <div class="container" id="gallery"></div>
-<div id="debug"></div>
 
 <div id="video-background">
     <video autoplay loop muted playsinline>
         <source src="chemistry_webpage_background_slowed.mp4" type="video/mp4">
     </video>
 </div>
+
+<!--
+<div class="comments-container">
+    <div class="comments-header">Обговорення</div>
+    
+    <div class="comment-form">
+        <input type="text" id="commentName" class="glass-input" placeholder="Ваше ім'я" maxlength="30">
+        <textarea id="commentText" class="glass-input" placeholder="Напишіть коментар..." maxlength="500"></textarea>
+        <button onclick="postComment()" class="submit-btn" id="submitBtn">Надіслати</button>
+    </div>
+
+    <div class="comment-list" id="commentsList">
+        <div style="text-align:center; color: #888;">Завантаження коментарів...</div>
+    </div>
+</div>
+-->
+
 <script>
 /* =========================================
    1. ANIMATION & UI LOGIC (UNCHANGED)
@@ -1001,12 +1144,61 @@ function displayCardContent(contentArray, cardElement) {
 }
 function convertToHtml(markdownText) {
     if (!markdownText) return '';
-    let html = markdownText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    let html = markdownText;
+
+    // Process links first to handle formatting within them
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+        // Process formatting within the link text
+        let processedText = text;
+
+        // Handle the new 4-part syntax: {{size:color:position:text}}
+        processedText = processedText.replace(/\{\{([^:]+):([^:]+):([^:]+):(.+?)\}\}/g, (m, size, color, position, innerText) => {
+            let style = `font-size: ${size}; color: ${color};`;
+
+            switch(position.toLowerCase()) {
+                case 'center':
+                    style += ' display: block; text-align: center;';
+                    break;
+                case 'bottom':
+                    style += ' vertical-align: bottom;';
+                    break;
+                case 'top':
+                    style += ' vertical-align: top;';
+                    break;
+                case 'left':
+                    style += ' display: block; text-align: left;';
+                    break;
+                case 'right':
+                    style += ' display: block; text-align: right;';
+                    break;
+                default:
+                    break;
+            }
+
+            return `<span style="${style}">${innerText}</span>`;
+        });
+
+        // Handle the old 2-part syntax: {{size:text}} (for backward compatibility)
+        processedText = processedText.replace(/\{\{([^:]+):(.+?)\}\}/g, '<span style="font-size: $1;">$2</span>');
+
+        // Add style to ensure underline is visible, even if CSS overrides it
+        // Note: This is just for the link itself, not the inner span
+        const linkStyle = 'text-decoration: underline;'; 
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="${linkStyle}">${processedText}</a>`;
+    });
+
+    // Bold
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Italics
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Paragraphs and Line Breaks
     html = html.replace(/\n\n/g, '</p><p>');
     html = html.replace(/\n/g, '<br>');
-    return `<p>${html}</p>`; 
+
+    return `<p>${html}</p>`;
 }
 
 /* =========================================
@@ -1018,7 +1210,7 @@ let cardsData = []; // Global storage for the data
 async function initializeGallery() {
     // ⚠️ DEFINE YOUR DEPLOYED URLs HERE
     const LOAD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrFLkafkz9rKHqgPatI9yGXcu50rZHcUiUCQiYSXm-GW2He_ujdXMLwLgFKoMUX-vw/exec";   // URL from Script 1
-    const UPDATE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzz3-XilI5-TsXRxNz2GSZIaLmj5hq7o9s-Yk9Es-4Sfe3ynKOJaqbjoUWWXnOeV30k/exec"; // URL from Script 2
+    const UPDATE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCT_7jpJfmeUOi7gBnnf5tNI-bY05Jkyj89eeYSD1rfRB6x27i4J5IindVLTlmr5xp/exec"; // URL from Script 2
     const JSON_FILE_ID = "1BkhkIz3kE1ryyqcm1XvSmtmAkuaJ9y9x";
 
     const gal = document.getElementById("gallery");
@@ -1082,8 +1274,138 @@ function loadCardContent(cardId, cardElement) {
     displayCardContent(item.content, cardElement);
 }
 
+/* =========================================
+   3. COMMENTS SYSTEM LOGIC
+   ========================================= */
+
+// 🔥 REPLACE THIS WITH YOUR ACTUAL WEB APP URL
+//const COMMENTS_API_URL = 'https://script.google.com/macros/s/AKfycbxKRfNPACd5X5D9sZuHzNKuIjThOCzy8XxJpN3qe_zsAAEUQcTTbfkww_qxkNsvMNY4HA/exec'; 
+
+// Load comments on startup
+//document.addEventListener('DOMContentLoaded', loadComments);
+
+function loadComments() {
+    fetch(COMMENTS_API_URL, {
+        method: 'POST', // GAS Web App works best with POST for everything to avoid caching
+        body: JSON.stringify({ action: 'load' })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const list = document.getElementById('commentsList');
+        list.innerHTML = '';
+        
+        if (data.length === 0) {
+            list.innerHTML = '<div style="text-align:center; opacity:0.6">Коментарів ще немає. Будьте першим!</div>';
+            return;
+        }
+
+        data.forEach(comment => {
+            renderComment(comment);
+        });
+    })
+    .catch(err => console.error('Error loading comments:', err));
+}
+
+function renderComment(c) {
+    const list = document.getElementById('commentsList');
+    const date = new Date(c.date).toLocaleDateString('uk-UA') + ' ' + new Date(c.date).toLocaleTimeString('uk-UA', {hour: '2-digit', minute:'2-digit'});
+    
+    const div = document.createElement('div');
+    div.className = 'comment-item';
+    div.innerHTML = `
+        <div class="comment-meta">
+            <span class="comment-author">${escapeHtml(c.name)}</span>
+            <span>${date}</span>
+        </div>
+        <div class="comment-body">${escapeHtml(c.text)}</div>
+        <div class="comment-actions">
+            <button class="action-btn" onclick="react('${c.id}', 'like', this)">
+                👍 <span class="count">${c.likes || 0}</span>
+            </button>
+            <button class="action-btn" onclick="react('${c.id}', 'dislike', this)">
+                👎 <span class="count">${c.dislikes || 0}</span>
+            </button>
+        </div>
+    `;
+    list.appendChild(div);
+}
+
+function postComment() {
+    const nameInput = document.getElementById('commentName');
+    const textInput = document.getElementById('commentText');
+    const btn = document.getElementById('submitBtn');
+
+    if (!textInput.value.trim()) return alert('Будь ласка, напишіть коментар');
+
+    const name = nameInput.value.trim() || 'Анонім';
+    const text = textInput.value.trim();
+
+    // Disable button to prevent double send
+    btn.disabled = true;
+    btn.innerText = 'Надсилання...';
+
+    fetch(COMMENTS_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+            action: 'add',
+            name: name,
+            text: text
+        })
+    })
+    .then(res => res.json())
+    .then(response => {
+        if (response.status === 'success') {
+            textInput.value = ''; // Clear input
+            // Ideally prepend the new comment, but reloading is safer for sync
+            loadComments(); 
+        } else {
+            alert('Помилка надсилання.');
+        }
+    })
+    .catch(err => alert('Error: ' + err))
+    .finally(() => {
+        btn.disabled = false;
+        btn.innerText = 'Надіслати';
+    });
+}
+
+function react(id, type, btnElement) {
+    // Optimistic UI update (update visual immediately)
+    const countSpan = btnElement.querySelector('.count');
+    let currentCount = parseInt(countSpan.innerText);
+    countSpan.innerText = currentCount + 1;
+    btnElement.style.color = '#5facff'; // Highlight clicked
+
+    fetch(COMMENTS_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+            action: type,
+            id: id
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Update with actual server data to be sure
+        if (data.status === 'success') {
+            const parent = btnElement.parentElement;
+            parent.querySelector('button:first-child .count').innerText = data.likes;
+            parent.querySelector('button:last-child .count').innerText = data.dislikes;
+        }
+    });
+}
+
+// Helper for security (XSS prevention)
+function escapeHtml(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 // Start the process
 initializeGallery();
 </script>
-
 </html>
